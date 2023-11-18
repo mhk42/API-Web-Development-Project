@@ -26,6 +26,6 @@ if (isset($_POST["collect"])) {
     }
 }
 
-header("Location: Home.php");
+header("Location: home.php");
 exit();
 ?>
