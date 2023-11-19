@@ -23,13 +23,6 @@ if (!empty($dogs)) {
         echo "<img src='{$dog['image_url']}' class='card-img-top img-fluid' alt='Dog Image'>";
         echo "<div class='card-body'>";
         echo "<h5 class='card-title text-center'>Name: {$dog['name']}</h5>";
-        echo "<p class='card-text text-center'>Breed: {$dog['breed_name']}</p>";
-        echo "<p class='card-text text-center'>Stats:</p>";
-        echo "<ul class='list-group list-group-flush'>";
-        echo "<li class='list-group-item'>HP: {$dog['hp']}</li>";
-        echo "<li class='list-group-item'>Attack: {$dog['attack']}</li>";
-        echo "<li class='list-group-item'>Defense: {$dog['defense']}</li>";
-        echo "</ul>";
         echo "</div>";
         echo "</div>";
         echo "</div>";
@@ -38,8 +31,6 @@ if (!empty($dogs)) {
 } else {
     echo "<p>Your Dogemon inventory is empty.</p>";
 }
-?>
 
-<?php
 require(__DIR__ . "/../../partials/flash.php");
 ?>
