@@ -9,11 +9,31 @@ if (is_logged_in(true)) {
 }
 
 $db = getDB();
-$stmt = $db->query("SELECT * FROM Dogs");
+
+// Filtering options
+$filterName = isset($_GET['filter_name']) ? $_GET['filter_name'] : '';
+$filterLimit = isset($_GET['filter_limit']) ? $_GET['filter_limit'] : 10;
+// Ensure the limit is within the range of 1 to 100
+$filterLimit = max(1, min($filterLimit, 100));
+
+// SQL query with filters
+$stmt = $db->prepare("SELECT * FROM Dogs WHERE name LIKE :filterName LIMIT :filterLimit");
+$stmt->bindValue(':filterName', '%' . $filterName . '%', PDO::PARAM_STR);
+$stmt->bindValue(':filterLimit', $filterLimit, PDO::PARAM_INT);
+$stmt->execute();
 $dogs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Display the collected dogs
 echo "<h2>Your Dogemon Inventory</h2>";
+
+// Display filtering options
+echo "<form method='get' action=''>";
+echo "<label for='filter_name'>Filter by Name:</label>";
+echo "<input type='text' name='filter_name' value='{$filterName}' placeholder='Enter dog name'>";
+echo "<label for='filter_limit'>Limit Records (1-100):</label>";
+echo "<input type='number' name='filter_limit' value='{$filterLimit}' min='1' max='100'>";
+echo "<button type='submit'>Apply Filters</button>";
+echo "</form>";
 
 if (!empty($dogs)) {
     echo "<div class='row'>";
@@ -23,13 +43,22 @@ if (!empty($dogs)) {
         echo "<img src='{$dog['image_url']}' class='card-img-top img-fluid' alt='Dog Image'>";
         echo "<div class='card-body'>";
         echo "<h5 class='card-title text-center'>Name: {$dog['name']}</h5>";
+
+        // Buttons
+        echo "<div class='text-center'>";
+        echo "<a href='#' class='btn btn-info btn-sm m-1'>Details</a>";
+        echo "<a href='#' class='btn btn-warning btn-sm m-1'>Edit</a>";
+        echo "<a href='#' class='btn btn-danger btn-sm m-1'>Delete</a>";
+        echo "</div>";
+
         echo "</div>";
         echo "</div>";
         echo "</div>";
     }
     echo "</div>";
 } else {
-    echo "<p>Your Dogemon inventory is empty.</p>";
+    echo "<p>No results available.</p>";
+    echo "<a href='Dogemon.php' class='btn btn-primary'>Collect Dogemon</a>"; // Redirect to Dogemon.php when the button is clicked
 }
 
 require(__DIR__ . "/../../partials/flash.php");
