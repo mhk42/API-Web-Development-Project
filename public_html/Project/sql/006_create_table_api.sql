@@ -1,5 +1,6 @@
 CREATE TABLE Dogs (
     `id`         INT AUTO_INCREMENT NOT NULL,
+    `user_id`    INT,
     `name`       VARCHAR(20),
     `breed_name` VARCHAR(50),
     `hp`         INT,

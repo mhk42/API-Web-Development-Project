@@ -10,14 +10,18 @@ if (is_logged_in(true)) {
 
 $db = getDB();
 
+// Get the logged-in user's ID
+$user_id = get_user_id();
+
 // Filtering options
 $filterName = isset($_GET['filter_name']) ? $_GET['filter_name'] : '';
 $filterLimit = isset($_GET['filter_limit']) ? $_GET['filter_limit'] : 10;
 // Ensure the limit is within the range of 1 to 100
 $filterLimit = max(1, min($filterLimit, 100));
 
-// SQL query with filters
-$stmt = $db->prepare("SELECT * FROM Dogs WHERE name LIKE :filterName LIMIT :filterLimit");
+// SQL query with filters and user ID condition
+$stmt = $db->prepare("SELECT * FROM Dogs WHERE user_id = :user_id AND name LIKE :filterName LIMIT :filterLimit");
+$stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
 $stmt->bindValue(':filterName', '%' . $filterName . '%', PDO::PARAM_STR);
 $stmt->bindValue(':filterLimit', $filterLimit, PDO::PARAM_INT);
 $stmt->execute();
@@ -25,6 +29,12 @@ $dogs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Display the collected dogs
 echo "<h2>Your Dogemon Inventory</h2>";
+
+// Display "No Dogemon available" and "Collect Dogemon" above filtering options
+if (empty($dogs)) {
+    echo "<p>No Dogemon available.</p>";
+    echo "<a href='Dogemon.php' class='btn btn-primary'>Collect Dogemon</a>"; // Redirect to Dogemon.php when the button is clicked
+}
 
 // Display filtering options
 echo "<form method='get' action=''>";
@@ -56,9 +66,6 @@ if (!empty($dogs)) {
         echo "</div>";
     }
     echo "</div>";
-} else {
-    echo "<p>No results available.</p>";
-    echo "<a href='Dogemon.php' class='btn btn-primary'>Collect Dogemon</a>"; // Redirect to Dogemon.php when the button is clicked
 }
 
 require(__DIR__ . "/../../partials/flash.php");
