@@ -1,6 +1,13 @@
 <?php
 require(__DIR__ . "/../../partials/nav.php");
 
+if (is_logged_in(true)) {
+    // Comment this out if you don't want to see the session variables
+    error_log("Session data: " . var_export($_SESSION, true));
+}
+
+
+
 // Function to fetch a random dog from the API
 function getRandomDog() {
     $result = get("https://api.thedogapi.com/v1/images/search", "API_KEY", ["limit" => 1, "has_breeds" => "true"], false);
