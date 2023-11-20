@@ -27,7 +27,35 @@ function generateRandomStats() {
         'defense' => rand(10, 30),
     ];
 }
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["collect"])) {
+    $dogName = trim($_POST["dog_name"]);
+    $userId = get_user_id(); // Assuming you have a function like this
 
+    // Check if the dog name already exists for the current user
+    if (dogNameExists($dogName, $userId)) {
+        // Display an error flash message
+        echo '<div class="alert alert-danger" role="alert">Error: Dog name already in use. Choose a different name.</div>';
+    } else {
+        // Dog name is unique, proceed with collecting the dog
+        // ... (your existing code for collecting the dog)
+    }
+}
+
+function dogNameExists($dogName, $userId) {
+    $db = getDB();
+    // You should implement the logic to check if the dog name exists in your database
+    // Replace the following line with your actual database query
+    // Example assumes you have a database connection in $db
+    // and a table named "dogs" with columns "user_id" and "dog_name"
+    $query = "SELECT COUNT(*) FROM dogs WHERE user_id = :userId AND dog_name = :dogName";
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(":userId", $userId);
+    $stmt->bindParam(":dogName", $dogName);
+    $stmt->execute();
+    $count = $stmt->fetchColumn();
+    
+    return $count > 0;
+}
 
 ?>
 
@@ -51,7 +79,6 @@ function generateRandomStats() {
     <div class="card position-relative">
         <img src="<?= $randomDog['url']; ?>" class="card-img-top img-fluid" alt="Dog Image">
         <div class="card-body">
-            <h5 class="card-title text-center">Name: <?= $randomDog['breeds'][0]['name']; ?></h5>
             <p class="card-text text-center">Breed: <?= $randomDog['breeds'][0]['name'] ?? 'Unknown'; ?></p>
             <p class="card-text text-center">Stats:</p>
             <ul class="list-group">
@@ -59,15 +86,16 @@ function generateRandomStats() {
                 <li class="list-group-item">Attack: <?= $randomStats['attack']; ?></li>
                 <li class="list-group-item">Defense: <?= $randomStats['defense']; ?></li>
             </ul>
-            <form method="post" action="collect.php">
-                <!-- existing code for displaying dog information -->
-                <input type="hidden" name="dog_name" value="<?= $randomDog['breeds'][0]['name']; ?>">
+            <form method="post" action="collect.php" class="mt-3">
+                <div class="form-group">
+                    <input type="text" name="dog_name" id="dogName" class="form-control" placeholder="Enter Dog Name" required>
+                </div>
                 <input type="hidden" name="breed_name" value="<?= $randomDog['breeds'][0]['name'] ?? 'Unknown'; ?>">
                 <input type="hidden" name="hp" value="<?= $randomStats['hp']; ?>">
                 <input type="hidden" name="attack" value="<?= $randomStats['attack']; ?>">
                 <input type="hidden" name="defense" value="<?= $randomStats['defense']; ?>">
-                <input type="hidden" name="image_url" value="<?= $randomDog['url']; ?>"> <!-- Add this line for image URL -->
-                <button type="submit" class="btn btn-primary btn-block mt-3 position-absolute bottom-0 start-50 translate-middle-x" style="margin-bottom: 30px; border: none;" name="collect">Collect</button>
+                <input type="hidden" name="image_url" value="<?= $randomDog['url']; ?>">
+                <button type="submit" class="btn btn-primary btn-block" name="collect">Collect</button>
             </form>
         </div>
     </div>
