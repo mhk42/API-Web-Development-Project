@@ -29,18 +29,7 @@ function generateRandomStats() {
 }
 
 
-
-
-
-
-
-
 ?>
-
-
-
-
-
 
 
 
@@ -58,31 +47,31 @@ function generateRandomStats() {
             // Generate random stats for the dog
             $randomStats = generateRandomStats();
         ?>
-            <div class="col-md-6 offset-md-3 mb-4">
-                <div class="card">
-                    <img src="<?= $randomDog['url']; ?>" class="card-img-top img-fluid" alt="Dog Image">
-                    <div class="card-body">
-                        <h5 class="card-title text-center">Name: <?= $randomDog['breeds'][0]['name']; ?></h5>
-                        <p class="card-text text-center">Breed: <?= $randomDog['breeds'][0]['name'] ?? 'Unknown'; ?></p>
-                        <p class="card-text text-center">Stats:</p>
-                        <ul class="list-group">
-                            <li class="list-group-item">HP: <?= $randomStats['hp']; ?></li>
-                            <li class="list-group-item">Attack: <?= $randomStats['attack']; ?></li>
-                            <li class="list-group-item">Defense: <?= $randomStats['defense']; ?></li>
-                        </ul>
-                        <form method="post" action="collect.php">
-                        <!-- existing code for displaying dog information -->
-                        <input type="hidden" name="dog_name" value="<?= $randomDog['breeds'][0]['name']; ?>">
-                        <input type="hidden" name="breed_name" value="<?= $randomDog['breeds'][0]['name'] ?? 'Unknown'; ?>">
-                        <input type="hidden" name="hp" value="<?= $randomStats['hp']; ?>">
-                        <input type="hidden" name="attack" value="<?= $randomStats['attack']; ?>">
-                        <input type="hidden" name="defense" value="<?= $randomStats['defense']; ?>">
-                        <input type="hidden" name="image_url" value="<?= $randomDog['url']; ?>"> <!-- Add this line for image URL -->
-                        <button type="submit" class="btn btn-primary btn-block mt-3" name="collect">Collect</button>
-                    </form>
-                    </div>
-                </div>
-            </div>
+<div class="col-md-6 offset-md-3 mb-4">
+    <div class="card position-relative">
+        <img src="<?= $randomDog['url']; ?>" class="card-img-top img-fluid" alt="Dog Image">
+        <div class="card-body">
+            <h5 class="card-title text-center">Name: <?= $randomDog['breeds'][0]['name']; ?></h5>
+            <p class="card-text text-center">Breed: <?= $randomDog['breeds'][0]['name'] ?? 'Unknown'; ?></p>
+            <p class="card-text text-center">Stats:</p>
+            <ul class="list-group">
+                <li class="list-group-item">HP: <?= $randomStats['hp']; ?></li>
+                <li class="list-group-item">Attack: <?= $randomStats['attack']; ?></li>
+                <li class="list-group-item">Defense: <?= $randomStats['defense']; ?></li>
+            </ul>
+            <form method="post" action="collect.php">
+                <!-- existing code for displaying dog information -->
+                <input type="hidden" name="dog_name" value="<?= $randomDog['breeds'][0]['name']; ?>">
+                <input type="hidden" name="breed_name" value="<?= $randomDog['breeds'][0]['name'] ?? 'Unknown'; ?>">
+                <input type="hidden" name="hp" value="<?= $randomStats['hp']; ?>">
+                <input type="hidden" name="attack" value="<?= $randomStats['attack']; ?>">
+                <input type="hidden" name="defense" value="<?= $randomStats['defense']; ?>">
+                <input type="hidden" name="image_url" value="<?= $randomDog['url']; ?>"> <!-- Add this line for image URL -->
+                <button type="submit" class="btn btn-primary btn-block mt-3 position-absolute bottom-0 start-50 translate-middle-x" style="margin-bottom: 30px; border: none;" name="collect">Collect</button>
+            </form>
+        </div>
+    </div>
+</div>
         <?php
         }
         ?>

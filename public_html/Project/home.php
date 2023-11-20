@@ -34,16 +34,16 @@ echo "<h2>Your Dogemon Inventory</h2>";
 if (empty($dogs)) {
     echo "<p>No Dogemon available.</p>";
     echo "<a href='Dogemon.php' class='btn btn-primary'>Collect Dogemon</a>"; // Redirect to Dogemon.php when the button is clicked
+} else {
+    // Display filtering options only if there are dogs in the inventory
+    echo "<form method='get' action=''>";
+    echo "<label for='filter_name'>Filter by Name:</label>";
+    echo "<input type='text' name='filter_name' value='{$filterName}' placeholder='Enter dog name'>";
+    echo "<label for='filter_limit'>Limit Records (1-100):</label>";
+    echo "<input type='number' name='filter_limit' value='{$filterLimit}' min='1' max='100'>";
+    echo "<button type='submit'>Apply Filters</button>";
+    echo "</form>";
 }
-
-// Display filtering options
-echo "<form method='get' action=''>";
-echo "<label for='filter_name'>Filter by Name:</label>";
-echo "<input type='text' name='filter_name' value='{$filterName}' placeholder='Enter dog name'>";
-echo "<label for='filter_limit'>Limit Records (1-100):</label>";
-echo "<input type='number' name='filter_limit' value='{$filterLimit}' min='1' max='100'>";
-echo "<button type='submit'>Apply Filters</button>";
-echo "</form>";
 
 if (!empty($dogs)) {
     echo "<div class='row'>";
@@ -56,7 +56,7 @@ if (!empty($dogs)) {
 
         // Buttons
         echo "<div class='text-center'>";
-        echo "<a href='#' class='btn btn-info btn-sm m-1'>Details</a>";
+        echo "<a href='details.php?dog_id={$dog['id']}' class='btn btn-info btn-sm m-1'>Details</a>";
         echo "<a href='#' class='btn btn-warning btn-sm m-1'>Edit</a>";
         echo "<a href='#' class='btn btn-danger btn-sm m-1'>Delete</a>";
         echo "</div>";

@@ -1,6 +1,6 @@
 .alert-success {
     background-color: #2ECC71; 
-    color: #fff; 
+    color: #333; 
     padding: 10px; 
     border-radius: 5px; 
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
@@ -22,30 +22,29 @@
     color: #fff; 
 }
 
-
 nav li {
     display: inline-block; 
     margin: 0 10px; 
-    background-color: #663399;
+    background-color: #333;
     padding: 5px 10px; 
     border-radius: 5px; 
 }
 
 nav li a {
-    color: #FF69B4; 
+    color: #fff; /* Change text color to white */
     text-decoration: none; 
     font-weight: bold; 
 }
 
-
 input {
     border-radius: 0; 
     padding: 5px;
-    border: 2px solid #663399; 
+    border: 2px solid #333; 
+    color: #333;
 }
 
 body {
-    background-color: #FFD700; 
+    background-color: #fff; /* Change to white */
     color: #333; 
     font-family: Arial, sans-serif; 
     margin: 0; 
@@ -55,7 +54,7 @@ body {
 form {
     background-color: #fff;
     padding: 20px;
-    border: 2px solid #663399;
+    border: 2px solid #333;
     border-radius: 5px;
     margin: 10px auto; /* Center the form */
     max-width: 600px; /* Limit the width */
@@ -73,13 +72,13 @@ form input[type="email"],
 form input[type="password"] {
     width: 100%;
     padding: 5px;
-    border: 2px solid #663399;
+    border: 2px solid #333;
     border-radius: 5px;
     margin-bottom: 10px;
 }
 
 form button {
-    background-color: #663399;
+    background-color: #333;
     color: #fff;
     padding: 10px 20px;
     border: none;
@@ -96,12 +95,13 @@ table {
 }
 
 table th, table td {
-    border: 2px solid #663399;
+    border: 2px solid #333;
     padding: 10px;
     text-align: left;
 }
 
 table th {
-    background-color: #663399;
+    background-color: #333;
     color: #fff;
 }
+
