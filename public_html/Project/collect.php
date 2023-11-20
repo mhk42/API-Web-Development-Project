@@ -1,14 +1,10 @@
 <?php
 require(__DIR__ . "/../../partials/nav.php");
 
-
 if (is_logged_in(true)) {
     // Comment this out if you don't want to see the session variables
     error_log("Session data: " . var_export($_SESSION, true));
 }
-
-
-
 
 if (isset($_POST["collect"])) {
     // Retrieve dog information from the form
@@ -20,19 +16,35 @@ if (isset($_POST["collect"])) {
     $imageUrl = se($_POST, "image_url", "", false);
     $userId = get_user_id();
 
-    // TODO: Add validation if needed
-
-    // Insert data into the "Dogs" table
+    // Check if the dog name already exists for the specific user
     $db = getDB();
-    $stmt = $db->prepare("INSERT INTO Dogs (user_id, name, breed_name, hp, attack, defense, image_url) VALUES (:user_id, :name, :breed_name, :hp, :attack, :defense, :image_url)");
+    $checkStmt = $db->prepare("SELECT COUNT(*) FROM Dogs WHERE user_id = :user_id AND name = :name");
+    $checkStmt->execute([":user_id" => $userId, ":name" => $dogName]);
+    $count = $checkStmt->fetchColumn();
 
-    try {
-        // Add the image URL to the bindings
-        $stmt->execute([":user_id" => $userId, ":name" => $dogName, ":breed_name" => $breedName, ":hp" => $hp, ":attack" => $attack, ":defense" => $defense, ":image_url" => $imageUrl]);
-        flash("Dog collected successfully!", "success");
-    } catch (PDOException $e) {
-        // Handle any database errors
-        flash("Error collecting dog. Please try again.", "danger");
+    if ($count > 0) {
+        // Dog name already exists, display an error message
+        flash("Error collecting dog. Dog name is already in use.", "danger");
+    } else {
+        // Dog name doesn't exist, proceed with insertion
+        $insertStmt = $db->prepare("INSERT INTO Dogs (user_id, name, breed_name, hp, attack, defense, image_url) VALUES (:user_id, :name, :breed_name, :hp, :attack, :defense, :image_url)");
+
+        try {
+            // Add the image URL to the bindings
+            $insertStmt->execute([
+                ":user_id" => $userId,
+                ":name" => $dogName,
+                ":breed_name" => $breedName,
+                ":hp" => $hp,
+                ":attack" => $attack,
+                ":defense" => $defense,
+                ":image_url" => $imageUrl
+            ]);
+            flash("Dog collected successfully!", "success");
+        } catch (PDOException $e) {
+            // Handle any database errors
+            flash("Error collecting dog. Please try again.", "danger");
+        }
     }
 }
 
