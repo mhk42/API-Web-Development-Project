@@ -57,7 +57,7 @@ if (!empty($dogs)) {
         // Buttons
         echo "<div class='text-center'>";
         echo "<a href='details.php?dog_id={$dog['id']}' class='btn btn-info btn-sm m-1'>Details</a>";
-        echo "<a href='#' class='btn btn-warning btn-sm m-1'>Edit</a>";
+        echo "<a href='edit.php?dog_id={$dog['id']}' class='btn btn-warning btn-sm m-1'>Edit</a>";
         echo "<a href='#' class='btn btn-danger btn-sm m-1'>Delete</a>";
         echo "</div>";
 

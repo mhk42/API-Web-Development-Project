@@ -15,7 +15,7 @@ $dog_id = isset($_GET['dog_id']) ? $_GET['dog_id'] : null;
 echo "<div class='container mt-4 text-center'>";
 if (!$dog_id) {
     // Handle the case where no dog ID is provided
-    echo "<p class='text-danger'>Error: Dog ID not provided.</p>";
+    flash("Dog ID not provided", "danger");
 } else {
     // Fetch dog details from the database
     $stmt = $db->prepare("SELECT * FROM Dogs WHERE id = :dog_id");
@@ -43,7 +43,8 @@ if (!$dog_id) {
 
     // Add Edit and Delete buttons
     echo "<div class='mt-4'>";
-    echo "<a href='#' class='btn btn-warning mx-2'>Edit</a>";
+    // Modify the Edit button link to include the dog_id parameter
+    echo "<a href='edit.php?dog_id={$dog_id}' class='btn btn-warning mx-2'>Edit</a>";
     echo "<a href='#' class='btn btn-danger mx-2'>Delete</a>";
     echo "</div>";
 
