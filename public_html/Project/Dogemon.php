@@ -86,7 +86,7 @@ function dogNameExists($dogName, $userId) {
                 <li class="list-group-item">Attack: <?= $randomStats['attack']; ?></li>
                 <li class="list-group-item">Defense: <?= $randomStats['defense']; ?></li>
             </ul>
-            <form method="post" action="collect.php" class="mt-3">
+            <form method="post" action="collect.php" class="mt-3" style="border: none; box-shadow: none;">
                 <div class="form-group">
                     <input type="text" name="dog_name" id="dogName" class="form-control" placeholder="Enter Dog Name" required>
                 </div>
@@ -95,7 +95,7 @@ function dogNameExists($dogName, $userId) {
                 <input type="hidden" name="attack" value="<?= $randomStats['attack']; ?>">
                 <input type="hidden" name="defense" value="<?= $randomStats['defense']; ?>">
                 <input type="hidden" name="image_url" value="<?= $randomDog['url']; ?>">
-                <button type="submit" class="btn btn-primary btn-block" name="collect">Collect</button>
+                <button type="submit" class="btn btn-primary btn-block" name="collect" style="margin-left: 239px;">Collect</button>
             </form>
         </div>
     </div>

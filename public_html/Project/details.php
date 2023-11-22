@@ -6,7 +6,6 @@ if (is_logged_in(true)) {
     error_log("Session data: " . var_export($_SESSION, true));
 }
 
-
 $db = getDB();
 
 // Retrieve dog ID from the URL parameter
@@ -15,7 +14,7 @@ $dog_id = isset($_GET['dog_id']) ? $_GET['dog_id'] : null;
 echo "<div class='container mt-4 text-center'>";
 if (!$dog_id) {
     // Handle the case where no dog ID is provided
-    flash("Dog ID not provided", "danger");
+    flash("Dog ID not Provided", "danger");
 } else {
     // Fetch dog details from the database
     $stmt = $db->prepare("SELECT * FROM Dogs WHERE id = :dog_id");
@@ -40,19 +39,21 @@ if (!$dog_id) {
     echo "<p class='card-text'>HP: {$dogDetails['hp']}</p>";
     echo "<p class='card-text'>Attack: {$dogDetails['attack']}</p>";
     echo "<p class='card-text'>Defense: {$dogDetails['defense']}</p>";
-
     // Add Edit and Delete buttons
     echo "<div class='mt-4'>";
     // Modify the Edit button link to include the dog_id parameter
-    echo "<a href='edit.php?dog_id={$dog_id}' class='btn btn-warning mx-2'>Edit</a>";
-    echo "<a href='#' class='btn btn-danger mx-2'>Delete</a>";
+    echo "<a href='edit.php?dog_id={$dog_id}' class='btn btn-warning mx-2' style='min-width: 80px;'>Edit</a>";
+    // Add a form for the delete functionality
+    echo "<form action='delete.php' method='POST' style='display:inline; background-color: transparent; border: none; box-shadow: none;'>";
+    echo "<input type='hidden' name='dog_id' value='{$dog_id}'>";
+    echo "<button type='submit' class='btn btn-danger mx-2' style='min-width: 80px; border: none;'>Delete</button>";
+    echo "</form>";
     echo "</div>";
 
-    echo "</div>";
-    echo "</div>";
+echo "</div>";
+echo "</div>";
 }
 echo "</div>";
 
 require(__DIR__ . "/../../partials/flash.php");
-
 ?>
