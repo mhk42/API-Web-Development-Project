@@ -44,19 +44,13 @@ if (!$dog_id) {
 
         if ($existingDog) {
             // Display a warning message if the name is already taken
-            flash("Dog name is already taken by another dog of yours!", "danger");
+            flash("Dog name is already taken by another dog of yours!", "warning");
         } else {
             // Update the dog's name in the database
             $updateStmt = $db->prepare("UPDATE Dogs SET name = :new_name WHERE id = :dog_id");
             $updateStmt->bindValue(':new_name', $newName, PDO::PARAM_STR);
             $updateStmt->bindValue(':dog_id', $dog_id, PDO::PARAM_INT);
             $updateStmt->execute();
-
-            // Fetch updated dog details
-            $stmt = $db->prepare("SELECT * FROM Dogs WHERE id = :dog_id");
-            $stmt->bindValue(':dog_id', $dog_id, PDO::PARAM_INT);
-            $stmt->execute();
-            $dogDetails = $stmt->fetch(PDO::FETCH_ASSOC);
 
             // Display a success message
             flash("Dog name updated successfully!", "success");
@@ -75,7 +69,7 @@ if (!$dog_id) {
     echo "<p class='card-text'>Defense: {$dogDetails['defense']}</p>";
 
     // Display form for editing dog's name
-    echo "<form method='post' class='mt-4'>";
+    echo "<form method='post' class='mt-4' style='background-color: transparent; border: none; box-shadow: none;'>";
     echo "<label for='new_name'>Edit Dog Name:</label>";
     echo "<input type='text' name='new_name' id='new_name' value='{$dogDetails['name']}' required>";
     echo "<button type='submit' class='btn btn-primary'>Save Name</button>";

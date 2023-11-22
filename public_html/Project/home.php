@@ -8,6 +8,11 @@ if (is_logged_in(true)) {
     error_log("Session data: " . var_export($_SESSION, true));
 }
 
+$sessionFilterName = isset($_SESSION['filter_name']) ? $_SESSION['filter_name'] : '';
+$sessionFilterLimit = isset($_SESSION['filter_limit']) ? $_SESSION['filter_limit'] : 10;
+
+
+
 $db = getDB();
 
 // Get the logged-in user's ID
@@ -27,22 +32,68 @@ $stmt->bindValue(':filterLimit', $filterLimit, PDO::PARAM_INT);
 $stmt->execute();
 $dogs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+
+if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['dog_id'])) {
+    $deleteDogId = $_GET['dog_id'];
+
+    // Perform the deletion from the database
+    $deleteStmt = $db->prepare("DELETE FROM Dogs WHERE id = :dog_id AND user_id = :user_id");
+    $deleteStmt->bindValue(':dog_id', $deleteDogId, PDO::PARAM_INT);
+    $deleteStmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+    $deleteStmt->execute();
+
+    // Check if deletion was successful
+    $deletedRows = $deleteStmt->rowCount();
+    if ($deletedRows > 0) {
+        // Successfully deleted, set flash message
+        flash("Successfully deleted the Dogemon!", "success");
+
+        // Redirect to the current page with active filters
+    header("Location: " . $_SERVER['PHP_SELF'] . "?filter_name={$sessionFilterName}&filter_limit={$sessionFilterLimit}");
+    exit;
+    } else {
+        // No rows deleted, set flash message for failure
+        flash("Failed to delete the Dogemon. Please try again.", "danger", );
+    }
+
+    // Redirect to the current page to refresh the dog list
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit;
+}
+
 // Display the collected dogs
 echo "<h2>Your Dogemon Inventory</h2>";
 
-// Display "No Dogemon available" and "Collect Dogemon" above filtering options
-if (empty($dogs)) {
-    echo "<p>No Dogemon available.</p>";
-    echo "<a href='Dogemon.php' class='btn btn-primary'>Collect Dogemon</a>"; // Redirect to Dogemon.php when the button is clicked
-} else {
-    // Display filtering options only if there are dogs in the inventory
-    echo "<form method='get' action=''>";
-    echo "<label for='filter_name'>Filter by Name:</label>";
-    echo "<input type='text' name='filter_name' value='{$filterName}' placeholder='Enter dog name'>";
-    echo "<label for='filter_limit'>Limit Records (1-100):</label>";
-    echo "<input type='number' name='filter_limit' value='{$filterLimit}' min='1' max='100'>";
-    echo "<button type='submit'>Apply Filters</button>";
+
+echo "<form method='get' action=''>";
+echo "<label for='filter_name'>Filter by Name:</label>";
+echo "<input type='text' name='filter_name' value='{$sessionFilterName}' placeholder='Enter dog name'>";
+echo "<label for='filter_limit'>Limit Records (1-100):</label>";
+echo "<input type='number' name='filter_limit' value='{$sessionFilterLimit}' min='1' max='100'>";
+echo "<button type='submit'>Apply Filters</button>";
+echo "</form>";
+
+$_SESSION['filter_name'] = $filterName;
+$_SESSION['filter_limit'] = $filterLimit;
+
+
+if (empty($dogs) && !empty($filterName)) {
+    // Display a flash message if no Dogemon is found with the specified name
+    flash("No Dog Name Found.", "info");
+} elseif (empty($dogs)) {
+    // Display a flash message if no Dogemon is available
+    flash("No Dogemon available.", "info");
+
+    // Display the "Collect Dogemon" button
+    echo "<form method='get' action='Dogemon.php' style='background-color: transparent; border: none; box-shadow: none;'>";
+    echo "<button type='submit' style='margin-left: 185px;'>Collect Dogemon</button>";
     echo "</form>";
+} else {
+    echo "<div class='row'>";
+    foreach ($dogs as $dog) {
+
+}
+echo "</div>";
 }
 
 if (!empty($dogs)) {
@@ -58,7 +109,8 @@ if (!empty($dogs)) {
         echo "<div class='text-center'>";
         echo "<a href='details.php?dog_id={$dog['id']}' class='btn btn-info btn-sm m-1'>Details</a>";
         echo "<a href='edit.php?dog_id={$dog['id']}' class='btn btn-warning btn-sm m-1'>Edit</a>";
-        echo "<a href='#' class='btn btn-danger btn-sm m-1'>Delete</a>";
+        // Add a confirmation dialog for the delete action
+        echo "<a href='?action=delete&dog_id={$dog['id']}' class='btn btn-danger btn-sm m-1' onclick='return confirmDelete()'>Delete</a>";
         echo "</div>";
 
         echo "</div>";
@@ -67,6 +119,12 @@ if (!empty($dogs)) {
     }
     echo "</div>";
 }
+
+echo "<script>
+        function confirmDelete() {
+            return confirm('Are you sure you want to delete this Dogemon?');
+        }
+      </script>";
 
 require(__DIR__ . "/../../partials/flash.php");
 ?>
