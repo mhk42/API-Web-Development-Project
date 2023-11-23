@@ -33,6 +33,13 @@ $stmt->execute();
 $dogs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
+if (isset($_GET['battle_result'])) {
+    $battleResult = $_GET['battle_result'];
+    $message = ($battleResult === 'lost') ? "You lost the battle!" : "";
+    flash($message, "danger");
+}
+
+
 if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['dog_id'])) {
     $deleteDogId = $_GET['dog_id'];
 
@@ -104,15 +111,19 @@ if (!empty($dogs)) {
         echo "<img src='{$dog['image_url']}' class='card-img-top img-fluid' alt='Dog Image'>";
         echo "<div class='card-body'>";
         echo "<h5 class='card-title text-center'>Name: {$dog['name']}</h5>";
-
+    
         // Buttons
         echo "<div class='text-center'>";
         echo "<a href='details.php?dog_id={$dog['id']}' class='btn btn-info btn-sm m-1'>Details</a>";
         echo "<a href='edit.php?dog_id={$dog['id']}' class='btn btn-warning btn-sm m-1'>Edit</a>";
-        // Add a confirmation dialog for the delete action
         echo "<a href='?action=delete&dog_id={$dog['id']}' class='btn btn-danger btn-sm m-1' onclick='return confirmDelete()'>Delete</a>";
+    
+        // "Battle" button
+        echo "<a href='battle.php?dog_id={$dog['id']}&dog_name={$dog['name']}&dog_image={$dog['image_url']}' 
+              class='btn btn-battle btn-sm m-1' style='background-color: #4CAF50; color: white;'>Battle</a>";
+    
         echo "</div>";
-
+    
         echo "</div>";
         echo "</div>";
         echo "</div>";
@@ -120,11 +131,6 @@ if (!empty($dogs)) {
     echo "</div>";
 }
 
-echo "<script>
-        function confirmDelete() {
-            return confirm('Are you sure you want to delete this Dogemon?');
-        }
-      </script>";
-
+      
 require(__DIR__ . "/../../partials/flash.php");
 ?>
