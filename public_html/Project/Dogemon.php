@@ -2,7 +2,6 @@
 require(__DIR__ . "/../../partials/nav.php");
 
 if (is_logged_in(true)) {
-    // Comment this out if you don't want to see the session variables
     error_log("Session data: " . var_export($_SESSION, true));
 }
 
@@ -36,17 +35,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["collect"])) {
         // Display an error flash message
         echo '<div class="alert alert-danger" role="alert">Error: Dog name already in use. Choose a different name.</div>';
     } else {
-        // Dog name is unique, proceed with collecting the dog
-        // ... (your existing code for collecting the dog)
+        
     }
 }
 
 function dogNameExists($dogName, $userId) {
     $db = getDB();
-    // You should implement the logic to check if the dog name exists in your database
-    // Replace the following line with your actual database query
-    // Example assumes you have a database connection in $db
-    // and a table named "dogs" with columns "user_id" and "dog_name"
     $query = "SELECT COUNT(*) FROM dogs WHERE user_id = :userId AND dog_name = :dogName";
     $stmt = $db->prepare($query);
     $stmt->bindParam(":userId", $userId);
@@ -56,23 +50,15 @@ function dogNameExists($dogName, $userId) {
     
     return $count > 0;
 }
-
+//mhk42, 11/24/2023
+// Generates a random dog and displays its image along with some generated statistics. Users can enter a name for the dog and collect it
 ?>
-
-
-
-
-
-
 <div class="container-fluid">
     <h1 class="text-center mb-4">Spin for Your Dog</h1>
     <div class="row">
         <?php
-        // Get a random dog for the initial spin
         $randomDog = getRandomDog();
-
         if ($randomDog !== null) {
-            // Generate random stats for the dog
             $randomStats = generateRandomStats();
         ?>
 <div class="col-md-6 offset-md-3 mb-4">
