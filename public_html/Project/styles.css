@@ -1,87 +1,108 @@
+/* Alert Styles */
+.alert-success,
+.alert-warning,
+.alert-danger,
+.alert-info {
+    padding: 15px;
+    border-radius: 5px;
+    margin: 15px 0;
+}
+
 .alert-success {
-    background-color: #2ECC71; 
-    color: #fff; 
-    padding: 10px; 
-    border-radius: 5px; 
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
-    margin: 10px 0; 
+    background-color: #2ecc71;
+    color: #333;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .alert-warning {
-    background-color: #F1C40F; 
-    color: #333; 
+    background-color: #f39c12;
+    color: #333;
 }
 
 .alert-danger {
-    background-color: #E74C3C; 
+    background-color: #e74c3c;
     color: #fff;
 }
 
 .alert-info {
-    background-color: #17A589; 
-    color: #fff; 
+    background-color: #3498db;
+    color: #fff;
 }
 
+/* Updated Navigation Styles */
+nav {
+    background-color: #3498db; /* Change to a blue color */
+    border-bottom: 0px solid #2980b9; /* Darker border at the bottom */
+}
 
 nav li {
-    display: inline-block; 
-    margin: 0 10px; 
-    background-color: #663399;
-    padding: 5px 10px; 
-    border-radius: 5px; 
+    display: inline-block;
+    margin: 0 15px; /* Increased margin for better spacing */
+    padding: 10px 20px;
+    border-radius: 5px;
 }
 
 nav li a {
-    color: #FF69B4; 
-    text-decoration: none; 
-    font-weight: bold; 
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
 }
 
-
-input {
-    border-radius: 0; 
-    padding: 5px;
-    border: 2px solid #663399; 
+/* Hover effect for navigation items */
+nav li:hover {
+    background-color: #2980b9; /* Darker blue on hover */
 }
 
+/* Active state for the selected navigation item */
+nav li.active {
+    background-color: #2980b9; /* Darker blue for the active item */
+}
+
+/* Form and Input Styles */
 body {
-    background-color: #FFD700; 
-    color: #333; 
-    font-family: Arial, sans-serif; 
-    margin: 0; 
-    padding: 0; 
+    background-color: #ecf0f1; /* Change to a light gray background */
+}
+
+form input[type="submit"] {
+    background-color: #3498db;
+    color: #fff;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
 form {
     background-color: #fff;
     padding: 20px;
-    border: 2px solid #663399;
+    border: 2px solid #3498db; /* Blue border */
     border-radius: 5px;
-    margin: 10px auto; /* Center the form */
-    max-width: 600px; /* Limit the width */
+    margin: 20px auto; /* Increased margin for centering */
+    max-width: 600px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Soft box shadow */
 }
 
 form label {
     font-weight: bold;
     color: #333;
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
 }
 
 form input[type="text"],
 form input[type="email"],
 form input[type="password"] {
     width: 100%;
-    padding: 5px;
-    border: 2px solid #663399;
+    padding: 10px;
+    border: 2px solid #3498db; /* Blue border */
     border-radius: 5px;
-    margin-bottom: 10px;
+    margin-bottom: 15px; /* Increased margin for better spacing */
 }
 
 form button {
-    background-color: #663399;
+    background-color: #3498db;
     color: #fff;
-    padding: 10px 20px;
+    padding: 12px 24px; /* Increased padding for better button size */
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -91,17 +112,19 @@ form button {
 table {
     width: 100%;
     border-collapse: collapse;
-    margin: 10px auto; /* Center the table */
-    max-width: 600px; /* Limit the width */
+    margin: 20px auto; /* Increased margin for centering */
+    max-width: 600px;
 }
 
-table th, table td {
-    border: 2px solid #663399;
-    padding: 10px;
+table th,
+table td {
+    border: 2px solid #3498db; /* Blue border */
+    padding: 12px;
     text-align: left;
 }
 
 table th {
-    background-color: #663399;
+    background-color: #3498db;
     color: #fff;
 }
+
