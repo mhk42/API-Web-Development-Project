@@ -117,9 +117,11 @@ function startBattle() {
     // Simulate a random outcome (1 for player win, 2 for player lose)
     var battleResult = Math.floor(Math.random() * 2) + 1;
 
+
+    //mhk42, 11/24/2023, 
+    // This code creates a card with information about a randomly generated dog, along with a manually entered name
+    // this will appear if the player wins the battle
     if (battleResult == 1) {
-        // Player wins
-        // Display the collected dog information on the right side of the "Vs." code
         var html = `<div class='col-md-6 offset-md-3 mb-4'>
             <div class='card'>
                 <img src='<?= $randomDog['url'] ?>' class='card-img-top img-fluid' alt='Dog Image'>

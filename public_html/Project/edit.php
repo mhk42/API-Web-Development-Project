@@ -29,11 +29,16 @@ if (!$dog_id) {
         exit();
     }
 
-    // Check if the form is submitted
+    // Check if the logged-in user is the owner of the dog
+    $userId = get_user_id();
+    if ($dogDetails['user_id'] != $userId) {
+        flash("You don't have permission to view this dog.", "warning");
+        header("Location: home.php");
+        exit();
+    }
+
     if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $newName = isset($_POST['new_name']) ? trim($_POST['new_name']) : "";
-
-        // Check if the user already has a dog with the same name
         $userId = get_user_id();
         $checkNameStmt = $db->prepare("SELECT id FROM Dogs WHERE user_id = :user_id AND name = :new_name AND id != :dog_id");
         $checkNameStmt->bindValue(':user_id', $userId, PDO::PARAM_INT);
@@ -41,23 +46,21 @@ if (!$dog_id) {
         $checkNameStmt->bindValue(':dog_id', $dog_id, PDO::PARAM_INT);
         $checkNameStmt->execute();
         $existingDog = $checkNameStmt->fetch(PDO::FETCH_ASSOC);
-
+    
         if ($existingDog) {
-            // Display a warning message if the name is already taken
             flash("Dog name is already taken by another dog of yours!", "warning");
         } else {
-            // Update the dog's name in the database
             $updateStmt = $db->prepare("UPDATE Dogs SET name = :new_name WHERE id = :dog_id");
             $updateStmt->bindValue(':new_name', $newName, PDO::PARAM_STR);
             $updateStmt->bindValue(':dog_id', $dog_id, PDO::PARAM_INT);
             $updateStmt->execute();
-
-            // Display a success message
             flash("Dog name updated successfully!", "success");
+    
+            // Store the updated name in a variable
+            $dogDetails['name'] = $newName;
         }
     }
 
-    // Display dog details with styling
     echo "<h2 class='mb-4'>Dog Details</h2>";
     echo "<img src='{$dogDetails['image_url']}' class='img-fluid rounded' alt='Dog Image' style='max-width: 400px;'>";
     echo "<div class='card mt-4' style='width: 18rem; margin: 0 auto;'>";
@@ -67,8 +70,6 @@ if (!$dog_id) {
     echo "<p class='card-text'>HP: {$dogDetails['hp']}</p>";
     echo "<p class='card-text'>Attack: {$dogDetails['attack']}</p>";
     echo "<p class='card-text'>Defense: {$dogDetails['defense']}</p>";
-
-    // Display form for editing dog's name
     echo "<form method='post' class='mt-4' style='background-color: transparent; border: none; box-shadow: none;'>";
     echo "<label for='new_name'>Edit Dog Name:</label>";
     echo "<input type='text' name='new_name' id='new_name' value='{$dogDetails['name']}' required>";

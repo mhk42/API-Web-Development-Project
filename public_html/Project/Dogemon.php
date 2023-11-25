@@ -7,7 +7,9 @@ if (is_logged_in(true)) {
 
 
 
-// Function to fetch a random dog from the API
+//mhk42, 11/24/2023
+// The getRandomDog function makes a GET request to the Dog API's image search endpoint, providing an API key, limiting the result to one image with breeds information. 
+// If the HTTP status is 200 and a valid response is received, it decodes the JSON response and returns the data of the first dog; otherwise, it returns null.
 function getRandomDog() {
     $result = get("https://api.thedogapi.com/v1/images/search", "API_KEY", ["limit" => 1, "has_breeds" => "true"], false);
 
