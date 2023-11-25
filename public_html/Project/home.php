@@ -18,10 +18,9 @@ $db = getDB();
 // Get the logged-in user's ID
 $user_id = get_user_id();
 
-// Filtering options
+
 $filterName = isset($_GET['filter_name']) ? $_GET['filter_name'] : '';
 $filterLimit = isset($_GET['filter_limit']) ? $_GET['filter_limit'] : 10;
-// Ensure the limit is within the range of 1 to 100
 $filterLimit = max(1, min($filterLimit, 100));
 
 // SQL query with filters and user ID condition
@@ -72,6 +71,9 @@ if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['dog_i
 echo "<h2>Your Dogemon Inventory</h2>";
 
 
+
+//mhk42, 11/24/2023
+// The form is displayed with input fields for entering the dog name filter and adjusting the limit on the number of records to display.
 echo "<form method='get' action=''>";
 echo "<label for='filter_name'>Filter by Name:</label>";
 echo "<input type='text' name='filter_name' value='{$sessionFilterName}' placeholder='Enter dog name'>";
@@ -103,6 +105,10 @@ if (empty($dogs) && !empty($filterName)) {
 echo "</div>";
 }
 
+
+//mhk42, 11/24/2023
+//if the user has at least 1 dog, then it displays a list of dogs in a card format 
+// with various buttons for actions such as viewing details, editing, deleting, and battle.
 if (!empty($dogs)) {
     echo "<div class='row'>";
     foreach ($dogs as $dog) {
