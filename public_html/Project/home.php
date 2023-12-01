@@ -106,6 +106,57 @@ echo "</div>";
 }
 
 
+
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['favorite_dog'])) {
+        $favoriteDogId = $_POST['favorite_dog'];
+
+        // Update the 'is_favorite' column in the database
+        $updateStmt = $db->prepare("UPDATE Dogs SET is_favorite = 1 WHERE id = :dog_id AND user_id = :user_id");
+        $updateStmt->bindValue(':dog_id', $favoriteDogId, PDO::PARAM_INT);
+        $updateStmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+        $updateStmt->execute();
+    
+        // Check if the update was successful
+        $updatedRows = $updateStmt->rowCount();
+        if ($updatedRows > 0) {
+            // Successfully marked as favorite, set flash message
+            flash("Successfully marked as a favorite!", "success");
+        } else {
+            // No rows updated, set flash message for failure
+            flash("Failed to mark as a favorite. Please try again.", "danger");
+        }
+    
+        // Redirect to the current page after updating the favorite status
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit;
+    } elseif (isset($_POST['remove_favorite_dog'])) {
+        // Code for removing the dog from favorites
+        $removeFavoriteDogId = $_POST['remove_favorite_dog'];
+
+        // Update the 'is_favorite' column in the database to 0
+        $removeFavoriteStmt = $db->prepare("UPDATE Dogs SET is_favorite = 0 WHERE id = :dog_id AND user_id = :user_id");
+        $removeFavoriteStmt->bindValue(':dog_id', $removeFavoriteDogId, PDO::PARAM_INT);
+        $removeFavoriteStmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+        $removeFavoriteStmt->execute();
+
+        // Check if the update was successful
+        $removedRows = $removeFavoriteStmt->rowCount();
+        if ($removedRows > 0) {
+            // Successfully removed from favorites, set flash message
+            flash("Successfully removed from favorites!", "success");
+        } else {
+            // No rows updated, set flash message for failure
+            flash("Failed to remove from favorites. Please try again.", "danger");
+        }
+
+        // Redirect to the current page after updating the favorite status
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit;
+    }
+}
+
 //mhk42, 11/24/2023
 //if the user has at least 1 dog, then it displays a list of dogs in a card format 
 // with various buttons for actions such as viewing details, editing, deleting, and battle.
@@ -118,15 +169,28 @@ if (!empty($dogs)) {
         echo "<div class='card-body'>";
         echo "<h5 class='card-title text-center'>Name: {$dog['name']}</h5>";
     
-        // Buttons
+        // Buttons and other details (unchanged)
         echo "<div class='text-center'>";
         echo "<a href='details.php?dog_id={$dog['id']}' class='btn btn-info btn-sm m-1'>Details</a>";
         echo "<a href='edit.php?dog_id={$dog['id']}' class='btn btn-warning btn-sm m-1'>Edit</a>";
         echo "<a href='?action=delete&dog_id={$dog['id']}' class='btn btn-danger btn-sm m-1' onclick='return confirmDelete()'>Delete</a>";
-    
-        // "Battle" button
         echo "<a href='battle.php?dog_id={$dog['id']}&dog_name={$dog['name']}&dog_image={$dog['image_url']}' 
               class='btn btn-battle btn-sm m-1' style='background-color: #4CAF50; color: white;'>Battle</a>";
+    
+        // Check if the dog is already a favorite
+        if ($dog['is_favorite'] == 1) {
+            // "Remove Favorite" Button
+            echo "<form method='post' style='border: none; box-shadow: none;'>";
+            echo "<input type='hidden' name='remove_favorite_dog' value='{$dog['id']}'>";
+            echo "<button type='submit' class='btn btn-danger btn-sm mt-1'>Remove Favorite</button>";
+            echo "</form>";
+        } else {
+            // "Save as Favorite" Button
+            echo "<form method='post' style='border: none; box-shadow: none;'>";
+            echo "<input type='hidden' name='favorite_dog' value='{$dog['id']}'>";
+            echo "<button type='submit' class='btn btn-primary btn-sm mt-1'>Save as Favorite</button>";
+            echo "</form>";
+        }
     
         echo "</div>";
     
