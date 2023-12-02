@@ -74,14 +74,26 @@ echo "<h2>Your Dogemon Inventory</h2>";
 
 //mhk42, 11/24/2023
 // The form is displayed with input fields for entering the dog name filter and adjusting the limit on the number of records to display.
+// Display the form for filtering Dogemon by name
+// Display the form for filtering Dogemon by name and limit
 echo "<form method='get' action=''>";
 echo "<label for='filter_name'>Filter by Name:</label>";
-echo "<input type='text' name='filter_name' value='{$sessionFilterName}' placeholder='Enter dog name'>";
+$filterNameFromURL = isset($_GET['filter_name']) ? $_GET['filter_name'] : '';
+echo "<input type='text' name='filter_name' value='{$filterNameFromURL}' placeholder='Enter dog name'>";
+
 echo "<label for='filter_limit'>Limit Records (1-100):</label>";
-echo "<input type='number' name='filter_limit' value='{$sessionFilterLimit}' min='1' max='100'>";
+// Retrieve the filter_limit from the URL if it exists
+$filterLimitFromURL = isset($_GET['filter_limit']) ? $_GET['filter_limit'] : $sessionFilterLimit;
+echo "<input type='number' name='filter_limit' value='{$filterLimitFromURL}' min='1' max='100'>";
+
 echo "<button type='submit'>Apply Filters</button>";
 echo "</form>";
 
+// Update the session filter_name and filter_limit with the current values
+$_SESSION['filter_name'] = $filterNameFromURL;
+$_SESSION['filter_limit'] = $filterLimitFromURL;
+// Update the session filter_name with the current filterName
+$_SESSION['filter_name'] = $filterNameFromURL;
 $_SESSION['filter_name'] = $filterName;
 $_SESSION['filter_limit'] = $filterLimit;
 
