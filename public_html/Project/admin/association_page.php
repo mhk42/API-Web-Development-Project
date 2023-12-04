@@ -10,7 +10,7 @@ $user_id = get_user_id();
 $db = getDB();
 
 // Retrieve the original total count of dogs without filters
-$originalCountStmt = $db->query("SELECT COUNT(*) as total_count FROM Dogs");
+$originalCountStmt = $db->query("SELECT COUNT(*) as total_count FROM Dogs WHERE user_id IS NOT NULL");
 $originalCountResult = $originalCountStmt->fetch(PDO::FETCH_ASSOC);
 $originalTotalCount = $originalCountResult['total_count'];
 
@@ -149,7 +149,7 @@ if (empty($dogs)) {
         echo "<h5 class='card-title text-center'>Name: {$dog['name']}</h5>";
 
         // Display owner's name instead of ID
-        echo "<p class='text-center'>Owner: <a href='profile.php?user_id={$dog['user_id']}'>{$dog['dog_owner_name']}</a></p>";
+        echo "<p class='text-center'>Owner: <a href='profiles.php?user_id={$dog['user_id']}'>{$dog['dog_owner_name']}</a></p>";
 
         // Buttons and other details (similar to the existing code)
         echo "<div class='text-center'>";
