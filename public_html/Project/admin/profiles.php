@@ -20,6 +20,13 @@ if (isset($_GET['user_id'])) {
     if ($userData) {
         $username = $userData['username'];
 
+        // Fetch the original total count without filters
+        $dogsCountStmt = $db->prepare("SELECT COUNT(*) as total_count FROM Dogs WHERE user_id = :user_id");
+        $dogsCountStmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+        $dogsCountStmt->execute();
+        $dogsCountResult = $dogsCountStmt->fetch(PDO::FETCH_ASSOC);
+        $totalCount = $dogsCountResult['total_count'];
+
         // Filter variables
         $filterName = isset($_GET['filter_name']) ? $_GET['filter_name'] : '';
         $filterLimit = isset($_GET['filter_limit']) ? $_GET['filter_limit'] : 10;
@@ -36,8 +43,26 @@ if (isset($_GET['user_id'])) {
         $dogsStmt->execute();
         $dogs = $dogsStmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Display the username and inventory header
-        echo "<h2>{$username}'s Inventory</h2>";
+        // Display the username, total count, and inventory header
+        echo "<h2>{$username}'s Profile (Total: {$totalCount}, Showing " . count($dogs) . " with Filters)</h2>";
+
+        // Get additional user information
+        $userInfoStmt = $db->prepare("SELECT username, email, created FROM Users WHERE id = :user_id");
+        $userInfoStmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+        $userInfoStmt->execute();
+        $userInfo = $userInfoStmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($userInfo) {
+            $email = $userInfo['email'];
+            $created = $userInfo['created'];
+
+            echo "<p>Email: {$email}</p>";
+            echo "<p>Account Created: " . date("F j, Y", strtotime($created)) . "</p>";
+
+        } else {
+            // Display a message if the user with the specified ID is not found
+            echo "<p>User not found.</p>";
+        }
 
         // Display the form for filtering Dogemon by name
         echo "<form method='get' action=''>";
