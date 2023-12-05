@@ -45,6 +45,7 @@ session_start();
         <?php if (has_role("Admin")) : ?>
             <li><a href="<?php echo get_url('admin/association_page.php'); ?>">Associations</a></li>
             <li><a href="<?php echo get_url('admin/no_association_page.php'); ?>">No Associations</a></li>
+            <li><a href="<?php echo get_url('admin/assign_associations.php'); ?>">Assign Associations</a></li>
             <li><a href="<?php echo get_url('admin/create_role.php'); ?>">Create Role</a></li>
             <li><a href="<?php echo get_url('admin/list_roles.php'); ?>">List Roles</a></li>
             <li><a href="<?php echo get_url('admin/assign_roles.php'); ?>">Assign Roles</a></li>
