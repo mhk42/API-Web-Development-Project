@@ -18,16 +18,38 @@ if (!$dog_id) {
 } else {
     // Check if the logged-in user has permission to view the dog's details
     $user_id = get_user_id(); // Assuming a function like get_user_id() is defined
-    $stmt = $db->prepare("SELECT * FROM Dogs WHERE id = :dog_id AND user_id = :user_id");
-    $stmt->bindValue(':dog_id', $dog_id, PDO::PARAM_INT);
-    $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
-    $stmt->execute();
-    $dogDetails = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if (!$dogDetails) {
-        flash("Invalid Dog ID or You don't have permission to view to this dog.", "danger");
-        header("Location: home.php"); 
-        exit();
+    // Query to check if the user has admin permissions
+    $adminCheckStmt = $db->prepare("SELECT * FROM UserRoles WHERE user_id = :user_id AND role_id = 1");
+    $adminCheckStmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+    $adminCheckStmt->execute();
+    $isAdmin = $adminCheckStmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$isAdmin) {
+        // If the user is not an admin, check ownership
+        $stmt = $db->prepare("SELECT * FROM Dogs WHERE id = :dog_id AND user_id = :user_id");
+        $stmt->bindValue(':dog_id', $dog_id, PDO::PARAM_INT);
+        $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->execute();
+        $dogDetails = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$dogDetails) {
+            flash("Invalid Dog ID or You don't have permission to view to this dog.", "danger");
+            header("Location: home.php"); 
+            exit();
+        }
+    } else {
+        // If the user is an admin, retrieve dog details without checking ownership
+        $stmt = $db->prepare("SELECT * FROM Dogs WHERE id = :dog_id");
+        $stmt->bindValue(':dog_id', $dog_id, PDO::PARAM_INT);
+        $stmt->execute();
+        $dogDetails = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$dogDetails) {
+            flash("Invalid Dog ID.", "danger");
+            header("Location: home.php"); 
+            exit();
+        }
     }
 
     echo "<h2 class='mb-4'>Dog Details</h2>";

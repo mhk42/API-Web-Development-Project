@@ -29,9 +29,22 @@ if (!$dog_id) {
         exit();
     }
 
-    // Check if the logged-in user is the owner of the dog
+    // Check if the logged-in user is the owner of the dog or has admin permissions
     $userId = get_user_id();
-    if ($dogDetails['user_id'] != $userId) {
+    $isAdmin = false;
+
+    // Check if the user has admin permissions
+    $roleStmt = $db->prepare("SELECT role_id FROM UserRoles WHERE user_id = :user_id");
+    $roleStmt->bindValue(':user_id', $userId, PDO::PARAM_INT);
+    $roleStmt->execute();
+    $userRole = $roleStmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($userRole && $userRole['role_id'] == 1) {
+        // User has admin permissions
+        $isAdmin = true;
+    }
+
+    if (!$isAdmin && $dogDetails['user_id'] != $userId) {
         flash("You don't have permission to view this dog.", "warning");
         header("Location: home.php");
         exit();
